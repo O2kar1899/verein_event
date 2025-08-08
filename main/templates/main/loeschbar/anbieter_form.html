@@ -1,0 +1,10 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+  <h2>Anbieter bearbeiten</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Änderungen speichern</button>
+  </form>
+{% endblock %}

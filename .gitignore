@@ -1,0 +1,17 @@
+/Dj_env
+# Python
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3
+.env
+
+# Tailwind
+theme/static_src/
+theme/node_modules/
+theme/static/css/*
+
+# VSCode / IDE
+.vscode/
+.idea/

@@ -1,0 +1,156 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Registrieren{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+    <!-- Systemnachrichten -->
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                {% if message.tags == 'error' %} 
+                    bg-red-50 text-red-800 border-l-4 border-red-500
+                {% elif message.tags == 'success' %} 
+                    bg-green-50 text-green-800 border-l-4 border-green-500
+                {% else %} 
+                    bg-blue-50 text-blue-800 border-l-4 border-blue-500
+                {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Registrieren</h1>
+
+    <form method="post" class="space-y-5">
+        {% csrf_token %}
+        
+        <!-- Benutzername -->
+        <div class="space-y-1">
+            <label for="id_username" class="block text-sm font-medium text-gray-700">
+                Benutzername <span class="text-red-500">*</span>
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="text-red-600 text-sm mt-1">{{ form.username.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Vorname -->
+        <div class="space-y-1">
+            <label for="id_first_name" class="block text-sm font-medium text-gray-700">
+                Vorname <span class="text-red-500">*</span>
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="text-red-600 text-sm mt-1">{{ form.first_name.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Nachname -->
+        <div class="space-y-1">
+            <label for="id_last_name" class="block text-sm font-medium text-gray-700">
+                Nachname <span class="text-red-500">*</span>
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="text-red-600 text-sm mt-1">{{ form.last_name.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- E-Mail -->
+        <div class="space-y-1">
+            <label for="id_email" class="block text-sm font-medium text-gray-700">
+                E-Mail <span class="text-red-500">*</span>
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-red-600 text-sm mt-1">{{ form.email.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        
+        <!-- Passwort 1 -->
+        <div class="space-y-1">
+            <label for="id_password1" class="block text-sm font-medium text-gray-700">
+                Passwort <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+                {{ form.password1 }}
+                <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
+            {% if form.password1.errors %}
+                <ul class="mt-1 text-sm text-red-600 space-y-1">
+                    {% for error in form.password1.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p class="text-xs text-gray-500 mt-1">
+                {{ form.password1.help_text }}
+            </p>
+        </div>
+        
+        <!-- Passwort 2 -->
+        <div class="space-y-1">
+            <label for="id_password2" class="block text-sm font-medium text-gray-700">
+                Passwort bestätigen <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+                {{ form.password2 }}
+                <button type="button" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
+            {% if form.password2.errors %}
+                <div class="text-red-600 text-sm mt-1">{{ form.password2.errors|join:", " }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="pt-2">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg">
+                Registrieren
+            </button>
+        </div>
+        
+        <p class="text-xs text-gray-500 text-center mt-3">
+            Mit <span class="text-red-500">*</span> markierte Felder sind Pflichtfelder.
+        </p>    
+    </form>
+    
+    <div class="mt-6 text-center text-sm text-gray-600 border-t border-gray-200 pt-4">
+        <p>Bereits registriert? <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-medium underline">Zum Login</a></p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Password toggle functionality
+    const toggleButtons = document.querySelectorAll('[type="button"]');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.previousElementSibling;
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            this.classList.toggle('text-blue-500');
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'main/base_anbieter.html' %}
+{% load static %}
+
+{% block title %}Veranstaltungen{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="bg-light p-5 rounded shadow-sm">
+
+        <h1 class="mb-4 text-center">Herzlich willkommen im Vereins-Portal von <strong>Spielplan+</strong></h1>
+        <p class="lead text-center">Ihr wollt eure Veranstaltungen bekannt machen?<br>
+        Ob Turniere, Vereinsfeste oder Ausflüge – bei uns erreicht ihr die ganze Region!</p>
+
+        <hr class="my-4">
+
+        <h4 class="mt-4">Für neue Vereine</h4>
+        <ul class="list-unstyled">
+          <li>✔ Registriert euch kostenlos – in nur 2 Minuten.</li>
+          <li>✔ Tragt eure Termine ein – und sie erscheinen in unserem öffentlichen Kalender.</li>
+          <li>✔ Mehr Reichweite – für eure Events und neue Mitglieder!</li>
+        </ul>
+
+        <div class="mt-3">
+          <a href="{% url 'registrieren' %}" class="btn btn-primary me-2">Jetzt als Verein registrieren</a>
+        </div>
+
+        <hr class="my-4">
+
+        <h4 class="mt-4">Bereits registriert?</h4>
+        <p>Loggt euch ein, um Termine zu verwalten oder neue Events anzulegen:</p>
+        <a href="{% url 'login' %}" class="btn btn-outline-secondary">Zum Login</a>
+
+        <hr class="my-4">
+
+        <h4 class="mt-4">Warum hier werben?</h4>
+        <ul class="list-unstyled">
+          <li>✔ <strong>Kostenlos & einfach:</strong> Keine versteckten Gebühren.</li>
+          <li>✔ <strong>Gezielte Reichweite:</strong> Menschen in eurer Region suchen genau nach euren Angeboten.</li>
+          <li>✔ <strong>Alles aus einer Hand:</strong> Kein technisches Know-how nötig.</li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Anmelden</h2>
+    
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                  {% if message.tags == 'error' %} 
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                  {% else %} 
+                      bg-blue-50 text-blue-800 border-l-4 border-blue-500
+                  {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_username" class="block text-sm font-medium text-gray-700">
+                Benutzername oder E-Mail
+            </label>
+            <input type="text" name="username" id="id_username" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   required autofocus>
+        </div>
+        
+        <div>
+            <label for="id_password" class="block text-sm font-medium text-gray-700">
+                Passwort
+            </label>
+
+            <div class="password-toggle-container relative">
+                <input type="password" name="password" id="id_password"
+                       class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                       required>
+                <button type="button" class="password-toggle absolute inset-y-0 right-2 flex items-center text-gray-500">
+                    <!-- Auge (Passwort sichtbar) initial -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <input id="remember-me" name="remember-me" type="checkbox" 
+                       class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                <label for="remember-me" class="ml-2 block text-sm text-gray-700">
+                    Angemeldet bleiben
+                </label>
+            </div>
+            
+            <div class="text-sm">
+                <a href="{% url 'password_reset' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                    Passwort vergessen?
+                </a>
+            </div>
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Login
+            </button>
+        </div>
+    </form>
+    
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <p>Noch kein Konto? 
+            <a href="{% url 'registrieren' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Jetzt registrieren
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/passwordToggle.js' %}"></script>
+{% endblock %}
