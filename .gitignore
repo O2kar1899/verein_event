@@ -15,3 +15,13 @@ theme/static/css/*
 # VSCode / IDE
 .vscode/
 .idea/
+git 
+
+# Virtuelle Umgebungen
+venv/
+.env/
+*_env
+.env.bak/
+venv.bak/
+*.pyc
+/Dj_Versnst

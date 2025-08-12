@@ -1,0 +1,129 @@
+.
+├── Dj_env
+│   ├── bin
+│   ├── include
+│   │   └── python3.11
+│   ├── lib
+│   │   └── python3.11
+│   │       └── site-packages
+│   └── lib64 -> lib
+├── main
+│   ├── migrations
+│   │   └── __pycache__
+│   ├── __pycache__
+│   ├── static
+│   │   ├── js
+│   │   └── main
+│   ├── templates
+│   │   └── main
+│   │       └── loeschbar
+│   └── templatetags
+│       └── __pycache__
+├── theme
+│   ├── __pycache__
+│   ├── static
+│   │   └── css
+│   │       └── dist
+│   ├── static_src
+│   │   ├── node_modules
+│   │   │   ├── @alloc
+│   │   │   ├── @ampproject
+│   │   │   ├── ansi-regex
+│   │   │   ├── ansi-styles
+│   │   │   ├── anymatch
+│   │   │   ├── binary-extensions
+│   │   │   ├── braces
+│   │   │   ├── chokidar
+│   │   │   ├── chownr
+│   │   │   ├── cliui
+│   │   │   ├── color-convert
+│   │   │   ├── color-name
+│   │   │   ├── cross-env
+│   │   │   ├── cross-spawn
+│   │   │   ├── cssesc
+│   │   │   ├── dependency-graph
+│   │   │   ├── detect-libc
+│   │   │   ├── eastasianwidth
+│   │   │   ├── emoji-regex
+│   │   │   ├── enhanced-resolve
+│   │   │   ├── escalade
+│   │   │   ├── fill-range
+│   │   │   ├── foreground-child
+│   │   │   ├── fs-extra
+│   │   │   ├── get-caller-file
+│   │   │   ├── glob
+│   │   │   ├── glob-parent
+│   │   │   ├── graceful-fs
+│   │   │   ├── @isaacs
+│   │   │   ├── is-binary-path
+│   │   │   ├── isexe
+│   │   │   ├── is-extglob
+│   │   │   ├── is-fullwidth-code-point
+│   │   │   ├── is-glob
+│   │   │   ├── is-number
+│   │   │   ├── jackspeak
+│   │   │   ├── jiti
+│   │   │   ├── @jridgewell
+│   │   │   ├── jsonfile
+│   │   │   ├── lightningcss
+│   │   │   ├── lightningcss-linux-arm64-gnu
+│   │   │   ├── lightningcss-linux-arm64-musl
+│   │   │   ├── lilconfig
+│   │   │   ├── lru-cache
+│   │   │   ├── magic-string
+│   │   │   ├── minimatch
+│   │   │   ├── minipass
+│   │   │   ├── minizlib
+│   │   │   ├── mkdirp
+│   │   │   ├── nanoid
+│   │   │   ├── normalize-path
+│   │   │   ├── package-json-from-dist
+│   │   │   ├── path-key
+│   │   │   ├── path-scurry
+│   │   │   ├── picocolors
+│   │   │   ├── picomatch
+│   │   │   ├── pify
+│   │   │   ├── postcss
+│   │   │   ├── postcss-cli
+│   │   │   ├── postcss-load-config
+│   │   │   ├── postcss-nested
+│   │   │   ├── postcss-reporter
+│   │   │   ├── postcss-selector-parser
+│   │   │   ├── postcss-simple-vars
+│   │   │   ├── pretty-hrtime
+│   │   │   ├── read-cache
+│   │   │   ├── readdirp
+│   │   │   ├── require-directory
+│   │   │   ├── rimraf
+│   │   │   ├── shebang-command
+│   │   │   ├── shebang-regex
+│   │   │   ├── signal-exit
+│   │   │   ├── slash
+│   │   │   ├── source-map-js
+│   │   │   ├── string-width
+│   │   │   ├── string-width-cjs
+│   │   │   ├── strip-ansi
+│   │   │   ├── strip-ansi-cjs
+│   │   │   ├── @tailwindcss
+│   │   │   ├── tailwindcss
+│   │   │   ├── tapable
+│   │   │   ├── tar
+│   │   │   ├── thenby
+│   │   │   ├── tinyglobby
+│   │   │   ├── to-regex-range
+│   │   │   ├── universalify
+│   │   │   ├── util-deprecate
+│   │   │   ├── which
+│   │   │   ├── wrap-ansi
+│   │   │   ├── wrap-ansi-cjs
+│   │   │   ├── y18n
+│   │   │   ├── yallist
+│   │   │   ├── yaml
+│   │   │   ├── yargs
+│   │   │   └── yargs-parser
+│   │   └── src
+│   └── templates
+└── veranstaltungen
+    └── __pycache__
+
+127 directories

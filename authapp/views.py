@@ -21,11 +21,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class IndexView(TemplateView):
-    template_name = 'main/index.html'
+    template_name = 'authapp/index.html'
 
 class LoginSeiteView(View):
     def get(self, request):
-        return render(request, "main/login.html")
+        return render(request, "authapp/login.html")
 
     def post(self, request):
         username = request.POST.get("username")
@@ -37,7 +37,7 @@ class LoginSeiteView(View):
             return redirect("starting-page")
         else:
             messages.error(request, "Ungültiger Benutzername oder Passwort.")
-            return render(request, "main/login.html")
+            return render(request, "authapp/login.html")
 
 def user_registrieren(request):
     if request.method == "POST":
@@ -62,7 +62,7 @@ def user_registrieren(request):
     else:
         form = UserProfileForm()
     
-    return render(request, "main/registrieren.html", {"form": form})
+    return render(request, "authapp/registrieren.html", {"form": form})
 
 def check_username(request):
     username = request.GET.get('username', '')
@@ -110,7 +110,7 @@ def konto_bestaetigen(request, uidb64, token):
 def vereins_verwaltung(request):
     user_profile = request.user.profile
     vereine = user_profile.vereine.all()
-    return render(request, "main/vereins_verwaltung.html", {
+    return render(request, "authapp/vereins_verwaltung.html", {
         'vereine': vereine,
         'user_profile': user_profile
     })
@@ -128,7 +128,7 @@ def verein_hinzufuegen(request):
         return redirect('vereins_verwaltung')
     
     verfuegbare_vereine = Verein.objects.exclude(mitglieder=request.user.profile)
-    return render(request, "main/verein_hinzufuegen.html", {
+    return render(request, "authapp/verein_hinzufuegen.html", {
         'verfuegbare_vereine': verfuegbare_vereine
     })
 

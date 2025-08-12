@@ -23,11 +23,11 @@ urlpatterns = [
      path("logout/", 
           auth_views.LogoutView.as_view(), name='logout'),
      path("passwort-aendern/", 
-          PasswordChangeView.as_view(template_name="main/passwort_aendern.html"), 
+          PasswordChangeView.as_view(template_name="authapp/passwort_aendern.html"), 
           name="passwort_aendern"),
      path(
         "passwort-geaendert/",
-        auth_views.PasswordChangeDoneView.as_view(template_name="main/passwort_geaendert.html"),
+        auth_views.PasswordChangeDoneView.as_view(template_name="authapp/passwort_geaendert.html"),
         name="password_change_done",  # WICHTIG: Genau dieser Name wird erwartet!
     ),
      

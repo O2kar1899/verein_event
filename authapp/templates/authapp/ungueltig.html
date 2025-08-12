@@ -1,13 +1,13 @@
-{% extends 'main/base.html' %}
+{%extends 'authapp/base.html'%}
 {% load static %}
-{% block title %}Logout{% endblock %}
+{% block title %}Ungültiger Aktivierungslink{% endblock %}
 
 {% block css_files %}
     <link rel="stylesheet" href="{% static 'main/styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Logout</h2>
-<p>Du wurdest erfolgreich abgemeldet.</p>
+<h2>Ungültiger Aktivierungslink</h2>
+<p>Der Aktivierungslink ist ungültig oder abgelaufen.</p>
 <button><a href="{% url 'starting-page' %}">Zurück zur Startseite</a></button>
 {% endblock %}

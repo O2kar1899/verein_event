@@ -37,12 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # tailwind
     'tailwind',
     'theme',
     'django_browser_reload',  #Für Hot-Reload
-
-   
-    'main',
+    # eigene Apps
+    'authapp.apps.AuthConfig',
+    'eventapp.apps.EventappConfig',
 ]
 
 TAILWIND_APP_NAME = 'theme'  # Muss mit dem App-Namen übereinstimmen
