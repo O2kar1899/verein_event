@@ -1,0 +1,22 @@
+{
+  "name": "verein_event",
+  "version": "1.0.0",
+  "description": "Django + Tailwind Projekt",
+  "scripts": {
+    "tailwind": "postcss theme/static_src/src/styles.css -o theme/static/css/dist/styles.css --watch",
+    "django": "python manage.py runserver",
+    "dev": "concurrently \"npm run tailwind\" \"npm run django\"",
+    "build": "postcss theme/static_src/src/styles.css -o theme/static/css/dist/styles.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.11",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "concurrently": "^8.2.0",
+    "postcss-nested": "^7.0.2",
+    "postcss-simple-vars": "^7.0.1",
+    "rimraf": "^6.0.1"
+  }
+}

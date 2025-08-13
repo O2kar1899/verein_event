@@ -1,4 +1,6 @@
+# Raspi virtuelle Umgebung
 /Dj_env
+
 # Python
 *.pyc
 __pycache__/
@@ -7,20 +9,18 @@ __pycache__/
 db.sqlite3
 .env
 
-# Tailwind
+# Tailwind / Node
 theme/node_modules/
-theme/static/css/*
+# nur temporäre CSS ignorieren, gebaute CSS ins Repo aufnehmen
+theme/static/css/*.map
 
 # VSCode / IDE
 .vscode/
 .idea/
-git 
 
 # Virtuelle Umgebungen
 venv/
-.env/
+env_Dj/
 *_env
 .env.bak/
 venv.bak/
-*.pyc
-/Dj_Versnst
