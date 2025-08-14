@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # eigene Apps
     'authapp.apps.AuthConfig',
     'eventapp.apps.EventappConfig',
+    'startapp',
 ]
 
 TAILWIND_APP_NAME = 'theme'  # Muss mit dem App-Namen übereinstimmen
@@ -68,7 +69,7 @@ ROOT_URLCONF = 'veranstaltungen.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
