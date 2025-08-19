@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import DetailView, FormView, ListView
 
 # Create your views here.
 
@@ -9,5 +9,5 @@ class EvenListView(ListView):
 class EventDetailView(DetailView):
     pass
 
-class EventCreateView(FormView)
+class EventCreateView(FormView):
     pass

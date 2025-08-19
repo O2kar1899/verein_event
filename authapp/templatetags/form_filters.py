@@ -32,19 +32,8 @@ def add_class(field, css_class):
         - Bei Problemen: print(field.field.widget.attrs) zur Debugging
     """
     if isinstance(field, BoundField):
-        return field.as_widget(attrs={
-            "class": " ".join([field.css_classes(), css_class])
-        })
+        existing_classes = field.css_classes()
+        combined_classes = f"{existing_classes} {css_class}".strip()
+        return field.as_widget(attrs={"class": combined_classes}) # type: ignore #
+        
     return field
-
-from django import template
-
-register = template.Library()
-
-@register.filter(name='add_class')
-def add_class(field, css_class):
-    """
-    Fügt CSS-Klassen zu einem Formularfeld hinzu.
-    Verwendung im Template: {{ field|add_class:"meine-klassen" }}
-    """
-    return field.as_widget(attrs={"class": css_class})
