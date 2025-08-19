@@ -1,4 +1,4 @@
-{% extends "authapp/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 
@@ -15,7 +15,7 @@
                   {% if message.tags == 'error' %} 
                       bg-red-50 text-red-800 border-l-4 border-red-500
                   {% else %} 
-                      bg-blue-50 text-blue-800 border-l-4 border-blue-500
+                      bg-green-50 text-blue-800 border-l-4 border-blue-500
                   {% endif %}">
             {{ message }}
         </div>
@@ -40,13 +40,28 @@
                 Passwort
             </label>
 
-            <div class="password-toggle-container relative">
+            <div class="relative">
                 <input type="password" name="password" id="id_password"
                        class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
                        required>
-                <button type="button" class="password-toggle absolute inset-y-0 right-2 flex items-center text-gray-500">
-                    <!-- Auge (Passwort sichtbar) initial -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 pointer-events-none" fill="none"
+                <button type="button"
+                        class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-blue-500 toggle-password"
+                        data-target="id_password">
+                    <!-- durchgestrichenes Auge (Passwort verdeckt) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 eye-closed" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13.875 18.825A10.05 10.05 0 0112 19
+                                 c-4.478 0-8.268-2.943-9.542-7
+                                 a10.05 10.05 0 012.567-4.327m4.597-2.74
+                                 A9.956 9.956 0 0112 5c4.478 0 8.268 2.943
+                                 9.542 7a9.956 9.956 0 01-4.133 5.411M15 12
+                                 a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 3l18 18"/>
+                    </svg>
+                    <!-- normales Auge (Passwort sichtbar) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 eye-open hidden" fill="none"
                          viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -89,8 +104,25 @@
         </p>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'js/passwordToggle.js' %}"></script>
+<!-- JavaScript für Passwort-Toggle -->
+<script>
+    document.querySelectorAll(".toggle-password").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const input = document.getElementById(btn.dataset.target);
+            const eyeOpen = btn.querySelector(".eye-open");
+            const eyeClosed = btn.querySelector(".eye-closed");
+
+            if (input.type === "password") {
+                input.type = "text";
+                eyeOpen.classList.remove("hidden");
+                eyeClosed.classList.add("hidden");
+            } else {
+                input.type = "password";
+                eyeOpen.classList.add("hidden");
+                eyeClosed.classList.remove("hidden");
+            }
+        });
+    });
+</script>
 {% endblock %}

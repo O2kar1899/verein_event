@@ -1,27 +1,29 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from django.urls import reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
-
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.db import transaction
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
 from django.views.generic import TemplateView
-from django.db import transaction
-from .models import UserProfile, Verein
+
 from .forms import UserProfileForm
-import logging
+from .models import Organizations, UserProfile
 
 logger = logging.getLogger(__name__)
 
 class IndexView(TemplateView):
     template_name = 'authapp/index.html'
+
 
 class LoginSeiteView(View):
     def get(self, request):
@@ -30,14 +32,26 @@ class LoginSeiteView(View):
     def post(self, request):
         username = request.POST.get("username")
         password = request.POST.get("password")
+        remember_me = request.POST.get("remember-me")  # Checkbox-Status (None wenn nicht angeklickt)
+        
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
+            
+            # "Angemeldet bleiben" Funktionalität
+            if remember_me:
+                # Session für 2 Wochen behalten (1209600 Sekunden)
+                request.session.set_expiry(1209600)
+            else:
+                # Session endet wenn Browser geschlossen wird
+                request.session.set_expiry(0)
+            
             return redirect("starting-page")
         else:
             messages.error(request, "Ungültiger Benutzername oder Passwort.")
             return render(request, "authapp/login.html")
+
 
 def user_registrieren(request):
     if request.method == "POST":
@@ -48,7 +62,7 @@ def user_registrieren(request):
                     user = form.save()
                     sende_bestaetigungs_email(request, user)
                     messages.success(request, "Registrierung erfolgreich! Bitte bestätigen Sie Ihre E-Mail.")
-                    return redirect("starting-page")
+                    #return redirect("starting-page")
                     
             except ValidationError as e:
                 messages.error(request, str(e))
@@ -62,7 +76,7 @@ def user_registrieren(request):
     else:
         form = UserProfileForm()
     
-    return render(request, "authapp/registrieren.html", {"form": form})
+    return render(request, "./authapp/registrieren.html", {"form": form})
 
 def check_username(request):
     username = request.GET.get('username', '')
@@ -115,29 +129,29 @@ def vereins_verwaltung(request):
         'user_profile': user_profile
     })
 
-@login_required
-def verein_hinzufuegen(request):
-    if request.method == "POST":
-        verein_id = request.POST.get('verein_id')
-        try:
-            verein = Verein.objects.get(id=verein_id)
-            request.user.profile.vereine.add(verein)
-            messages.success(request, f"Sie wurden dem Verein {verein.name} hinzugefügt.")
-        except Verein.DoesNotExist:
-            messages.error(request, "Verein nicht gefunden.")
-        return redirect('vereins_verwaltung')
+# @login_required
+# def verein_hinzufuegen(request):
+#     if request.method == "POST":
+#         verein_id = request.POST.get('verein_id')
+#         try:
+#             verein = Verein.objects.get(id=verein_id)
+#             request.user.profile.vereine.add(verein)
+#             messages.success(request, f"Sie wurden dem Verein {verein.name} hinzugefügt.")
+#         except Verein.DoesNotExist:
+#             messages.error(request, "Verein nicht gefunden.")
+#         return redirect('vereins_verwaltung')
     
-    verfuegbare_vereine = Verein.objects.exclude(mitglieder=request.user.profile)
-    return render(request, "authapp/verein_hinzufuegen.html", {
-        'verfuegbare_vereine': verfuegbare_vereine
-    })
+#     verfuegbare_vereine = Verein.objects.exclude(mitglieder=request.user.profile)
+#     return render(request, "authapp/verein_hinzufuegen.html", {
+#         'verfuegbare_vereine': verfuegbare_vereine
+#     })
 
-@login_required
-def verein_entfernen(request, verein_id):
-    try:
-        verein = Verein.objects.get(id=verein_id)
-        request.user.profile.vereine.remove(verein)
-        messages.success(request, f"Sie wurden aus dem Verein {verein.name} entfernt.")
-    except Verein.DoesNotExist:
-        messages.error(request, "Verein nicht gefunden.")
-    return redirect('vereins_verwaltung')
+# @login_required
+# def verein_entfernen(request, verein_id):
+#     try:
+#         verein = Verein.objects.get(id=verein_id)
+#         request.user.profile.vereine.remove(verein)
+#         messages.success(request, f"Sie wurden aus dem Verein {verein.name} entfernt.")
+#     except Verein.DoesNotExist:
+#         messages.error(request, "Verein nicht gefunden.")
+#     return redirect('vereins_verwaltung')

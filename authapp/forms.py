@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm  # Dieser Import fehlte
-from .models import Verein, UserProfile
+from django.contrib.auth.models import User
+
+from .models import Organizations, UserProfile
+
 
 class UserProfileForm(UserCreationForm):
     phone = forms.CharField(
@@ -13,7 +15,7 @@ class UserProfileForm(UserCreationForm):
         })
     )
     vereine = forms.ModelMultipleChoiceField(
-        queryset=Verein.objects.all(),
+        queryset=Organizations.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Vereine"

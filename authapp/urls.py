@@ -1,11 +1,12 @@
-from django.urls import path
-from django.contrib.auth.views import  PasswordChangeView
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import path
+
 from . import views
 
 urlpatterns = [
      path('', views.IndexView.as_view(), 
-          name='starting-page'),
+          name='auth-start'),
      # path('anbieter-portal/', views.AnbieterPortalView.as_view(),
      #      name='anbieter-portal'),
 
@@ -20,7 +21,7 @@ urlpatterns = [
      path('login/', 
           views.LoginSeiteView.as_view(), 
           name='login'),
-     path("logout/", 
+     path("logout", 
           auth_views.LogoutView.as_view(), name='logout'),
      path("passwort-aendern/", 
           PasswordChangeView.as_view(template_name="authapp/passwort_aendern.html"), 
