@@ -14,7 +14,7 @@ class EventModel(models.Model):
     end_date = models.DateTimeField(verbose_name='Enddatum', blank=True, null=True)
     is_public = models.BooleanField(default=True, verbose_name='Öffentlich')
     
-    created_at = models.DateTimeField(verbose_name='Erstellt am', auto_now_add=True)
+    created_at = models.DateTimeField(verbose_name='Erstellt am', auto_now=True)
     updated_at = models.DateTimeField(verbose_name='Geändert am', auto_now=True)
     
     def __str__(self):
