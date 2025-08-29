@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Event-Übersicht{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Event-Übersicht</h2>
+        {% if user.is_authenticated %}
+        <a href="{% url 'eventapp:create_event' %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+            Neues Event erstellen
+        </a>
+        {% endif %}
+    </div>
+    
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                  {% if message.tags == 'error' %} 
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                  {% else %} 
+                      bg-green-50 text-blue-800 border-l-4 border-blue-500
+                  {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if events %}
+    <div class="space-y-4">
+        {% for event in events %}
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">
+                        <a href="{% url 'eventapp:event_detail' event.id %}" class="hover:text-blue-600">
+                            {{ event.title }}
+                        </a>
+                    </h3>
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-medium">Organisation:</span> {{ event.organization.name }}
+                    </p>
+                    <p class="text-gray-600 mb-3">
+                        <span class="font-medium">URL:</span> 
+                        <a href="{{ event.event_url }}" target="_blank" class="text-blue-600 hover:underline">
+                            {{ event.event_url }}
+                        </a>
+                    </p>
+                </div>
+                <div class="text-right">
+                    <a href="{% url 'eventapp:event_detail' event.id %}" 
+                       class="text-blue-600 hover:text-blue-800 font-medium">
+                        Details →
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <h3 class="mt-2 text-lg font-medium text-gray-900">Keine Events vorhanden</h3>
+        <p class="mt-1 text-gray-500">Es wurden noch keine Events erstellt.</p>
+        {% if user.is_authenticated %}
+        <div class="mt-6">
+            <a href="{% url 'eventapp:create_event' %}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Erstellen Sie Ihr erstes Event
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

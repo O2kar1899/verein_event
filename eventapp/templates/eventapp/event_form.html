@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Event erstellen{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Event erstellen</h2>
+    
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                  {% if message.tags == 'error' %} 
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                  {% else %} 
+                      bg-green-50 text-blue-800 border-l-4 border-blue-500
+                  {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if not user.is_authenticated %}
+    <div class="mb-6 p-4 bg-yellow-50 text-yellow-800 border-l-4 border-yellow-500 rounded-lg">
+        <p class="text-sm font-medium">Sie müssen angemeldet sein, um ein Event zu erstellen.</p>
+        <a href="{% url 'login' %}" class="mt-2 inline-block text-sm font-medium text-blue-600 hover:text-blue-500">
+            Zum Login
+        </a>
+    </div>
+    {% else %}
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_title" class="block text-sm font-medium text-gray-700">
+                Titel
+            </label>
+            <input type="text" name="title" id="id_title" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   required autofocus value="{{ form.title.value|default:'' }}">
+            {% if form.title.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.title.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_event_url" class="block text-sm font-medium text-gray-700">
+                Event URL
+            </label>
+            <input type="url" name="event_url" id="id_event_url" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   value="{{ form.event_url.value|default:'' }}">
+            {% if form.event_url.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.event_url.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_organization" class="block text-sm font-medium text-gray-700">
+                Organisation
+            </label>
+            <select name="organization" id="id_organization" 
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                <option value="">--- Bitte wählen ---</option>
+                {% for org in organizations %}
+                <option value="{{ org.id }}" {% if form.organization.value == org.id %}selected{% endif %}>
+                    {{ org.name }}
+                </option>
+                {% endfor %}
+            </select>
+            {% if form.organization.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.organization.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Event erstellen
+            </button>
+        </div>
+    </form>
+    {% endif %}
+    
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <p>Zurück zur 
+            <a href="{% url 'eventapp:event_list' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Event-Übersicht
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

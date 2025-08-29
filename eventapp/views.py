@@ -1,13 +1,33 @@
-from django.shortcuts import render
-from django.views.generic import DetailView, FormView, ListView
+from authapp.models import Organizations
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
-# Create your views here.
+from .forms import EventForm
+from .models import EventModel
 
-class EvenListView(ListView):
-    pass
 
-class EventDetailView(DetailView):
-    pass
+@login_required
+def create_event(request):
+    organizations = Organizations.objects.all()
+    
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save()
+            # Zur Event-Liste weiterleiten MIT App-Namespace
+            return redirect('eventapp:event_list')
+    else:
+        form = EventForm()
+    
+    return render(request, 'eventapp/event_form.html', {
+        'form': form,
+        'organizations': organizations
+    })
 
-class EventCreateView(FormView):
-    pass
+def event_list(request):
+    events = EventModel.objects.all().order_by('-id')
+    return render(request, 'eventapp/event_list.html', {'events': events})
+
+def event_detail(request, event_id):
+    event = get_object_or_404(EventModel, id=event_id)
+    return render(request, 'eventapp/event_detail.html', {'event': event})
