@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 
-class Organizations(models.Model):
+class Organization(models.Model):
     name = models.CharField(max_length=150)
     organization_url = models.URLField(verbose_name='Orga_URL')
     street = models.CharField(max_length=100, null=True, blank=True)
@@ -25,7 +25,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone = models.CharField(max_length=15, blank=True, null=True)
     vereine = models.ManyToManyField(
-        Organizations, 
+        Organization,
         blank=True,  # Erlaubt leere Zuordnung
         related_name='mitglieder'  # Verein.mitglieder.all() gibt alle User
     )

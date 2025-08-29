@@ -17,7 +17,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from .forms import UserProfileForm
-from .models import Organizations, UserProfile
+from .models import Organization, UserProfile
 
 logger = logging.getLogger(__name__)
 

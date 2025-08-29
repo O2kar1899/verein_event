@@ -1,4 +1,4 @@
-from authapp.models import Organizations
+from authapp.models import Organization
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -8,7 +8,7 @@ from .models import EventModel
 
 @login_required
 def create_event(request):
-    organizations = Organizations.objects.all()
+    organizations = Organization.objects.all()
     
     if request.method == 'POST':
         form = EventForm(request.POST)
