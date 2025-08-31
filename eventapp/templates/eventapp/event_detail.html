@@ -40,8 +40,25 @@
                         </p>
                     </div>
                 </div>
+
             </div>
             
+            <!-- Registrierung für das Even (falls erforderlin)-->
+            {% if event.registration_required %}
+            <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-lg">
+                <h3 class="text-lg font-semibold text-blue-800 mb-2">Anmeldung</h3>
+                {% if event.is_full %}
+                <p class="text-blue-700">Dieses Event ist ausgebucht.</p>
+                {% else %}
+                <p class="text-blue-700 mb-3">Für dieses Event ist eine Anmeldung erforderlich.</p>
+                <a href="{% url 'eventapp:event_registration' event.id %}" 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
+                    Jetzt anmelden
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
+
             <div>
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">Weitere Details</h3>
                 <div class="space-y-3">

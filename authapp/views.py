@@ -16,7 +16,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
 from django.views.generic import TemplateView
 
-from .forms import UserProfileForm
+from .forms import OrganizationForm, UserProfileForm
 from .models import Organization, UserProfile
 
 logger = logging.getLogger(__name__)
@@ -47,7 +47,7 @@ class LoginSeiteView(View):
                 # Session endet wenn Browser geschlossen wird
                 request.session.set_expiry(0)
             
-            return redirect("starting-page")
+            return redirect("startapp:starting-page")
         else:
             messages.error(request, "Ungültiger Benutzername oder Passwort.")
             return render(request, "authapp/login.html")
@@ -120,38 +120,26 @@ def konto_bestaetigen(request, uidb64, token):
         messages.error(request, 'Ungültiger oder abgelaufener Bestätigungslink.')
         return redirect('registrieren')
 
+
 @login_required
-def vereins_verwaltung(request):
-    user_profile = request.user.profile
-    vereine = user_profile.vereine.all()
-    return render(request, "authapp/vereins_verwaltung.html", {
-        'vereine': vereine,
-        'user_profile': user_profile
+def create_organization(request):
+    if request.method == 'POST':
+        form = OrganizationForm(request.POST)
+        if form.is_valid():
+            organization = form.save()
+            messages.success(request, f'Organisation "{organization.name}" wurde erfolgreich erstellt!')
+            return redirect('authapp:organization_list')  # Sie müssen diese URL noch definieren
+    else:
+        form = OrganizationForm()
+    
+    return render(request, 'authapp/organization.html', {
+        'form': form,
+        'title': 'Organisation erstellen'
     })
 
-# @login_required
-# def verein_hinzufuegen(request):
-#     if request.method == "POST":
-#         verein_id = request.POST.get('verein_id')
-#         try:
-#             verein = Verein.objects.get(id=verein_id)
-#             request.user.profile.vereine.add(verein)
-#             messages.success(request, f"Sie wurden dem Verein {verein.name} hinzugefügt.")
-#         except Verein.DoesNotExist:
-#             messages.error(request, "Verein nicht gefunden.")
-#         return redirect('vereins_verwaltung')
-    
-#     verfuegbare_vereine = Verein.objects.exclude(mitglieder=request.user.profile)
-#     return render(request, "authapp/verein_hinzufuegen.html", {
-#         'verfuegbare_vereine': verfuegbare_vereine
-#     })
-
-# @login_required
-# def verein_entfernen(request, verein_id):
-#     try:
-#         verein = Verein.objects.get(id=verein_id)
-#         request.user.profile.vereine.remove(verein)
-#         messages.success(request, f"Sie wurden aus dem Verein {verein.name} entfernt.")
-#     except Verein.DoesNotExist:
-#         messages.error(request, "Verein nicht gefunden.")
-#     return redirect('vereins_verwaltung')
+def organization_list(request):
+    organizations = Organization.objects.all()
+    return render(request, 'authapp/organization_list.html', {
+        'organizations': organizations,
+        'title': 'Organisationen'
+    })

@@ -17,6 +17,7 @@ class Organization(models.Model):
         ],
         verbose_name="Postleitzahl"
         )
+    city = models.CharField(max_length=100, null=True, blank=True)
     authenticity_checked = models.BooleanField(default=False)
    
 

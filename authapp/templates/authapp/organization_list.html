@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+        {% if user.is_authenticated %}
+        <a href="{% url 'authapp:create_organization' %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md">
+            Neue Organisation
+        </a>
+        {% endif %}
+    </div>
+    
+    {% if organizations %}
+    <div class="space-y-4">
+        {% for org in organizations %}
+        <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ org.name }}</h3>
+            <p class="text-gray-600 mb-2">
+                <span class="font-medium">URL:</span> 
+                <a href="{{ org.organization_url }}" target="_blank" class="text-blue-600 hover:underline">
+                    {{ org.organization_url }}
+                </a>
+            </p>
+            {% if org.street or org.post_code or org.city %}
+            <p class="text-gray-600 mb-2">
+                <span class="font-medium">Adresse:</span> 
+                {{ org.street }}, {{ org.post_code }} {{ org.city }}
+            </p>
+            {% endif %}
+            <p class="text-gray-600">
+                <span class="font-medium">Verifiziert:</span> 
+                {% if org.authenticity_checked %}✅ Ja{% else %}❌ Noch nicht bestätigt{% endif %}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-12">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-6 0H5m2 0h4M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        <h3 class="mt-2 text-lg font-medium text-gray-900">Keine Organisationen vorhanden</h3>
+        <p class="mt-1 text-gray-500">Es wurden noch keine Organisationen erstellt.</p>
+        {% if user.is_authenticated %}
+        <div class="mt-6">
+            <a href="{% url 'authapp:create_organization' %}" 
+               class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                Erste Organisation erstellen
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

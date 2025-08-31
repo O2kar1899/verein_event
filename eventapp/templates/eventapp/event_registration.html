@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Anmeldung für {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Anmeldung für {{ event.title }}</h2>
+    
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                  {% if message.tags == 'error' %} 
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                  {% else %} 
+                      bg-green-50 text-blue-800 border-l-4 border-blue-500
+                  {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if event.is_full %}
+    <div class="mb-6 p-4 bg-red-50 text-red-800 border-l-4 border-red-500 rounded-lg">
+        <p class="text-sm font-medium">Dieses Event ist leider ausgebucht.</p>
+    </div>
+    {% else %}
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_first_name" class="block text-sm font-medium text-gray-700">
+                Vorname *
+            </label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.first_name.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_last_name" class="block text-sm font-medium text-gray-700">
+                Nachname *
+            </label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.last_name.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="id_email" class="block text-sm font-medium text-gray-700">
+                E-Mail-Adresse *
+            </label>
+            {{ form.email }}
+            {% if form.email.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.email.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Anmelden
+            </button>
+        </div>
+    </form>
+    {% endif %}
+    
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <p>Zurück zum 
+            <a href="{% url 'eventapp:event_detail' event.id %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Event
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

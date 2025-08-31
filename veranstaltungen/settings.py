@@ -137,12 +137,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Für die Produktivumgebung:
+# EMAIL_HOST = 'smtp.example.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'your_email@example.com'
+# EMAIL_HOST_PASSWORD = 'your_email_password'
+
 DEFAULT_FROM_EMAIL = 'noreply@pschp.de'
 SERVER_EMAIL = 'server@pschp.de'
 
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'starting-page'
-LOGOUT_REDIRECT_URL = 'starting-page'
+LOGIN_URL = 'authapp:login'
+LOGIN_REDIRECT_URL = 'startapp:starting-page'
+LOGOUT_REDIRECT_URL = 'startapp:starting-page'
 
 # Logging
 LOGGING = {

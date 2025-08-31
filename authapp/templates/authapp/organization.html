@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">{{ title }}</h2>
+    
+    {% if messages %}
+    <div class="mb-6 space-y-3">
+        {% for message in messages %}
+        <div class="p-4 rounded-lg text-sm font-medium
+                  {% if message.tags == 'error' %} 
+                      bg-red-50 text-red-800 border-l-4 border-red-500
+                  {% else %} 
+                      bg-green-50 text-blue-800 border-l-4 border-blue-500
+                  {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <!-- Name -->
+        <div>
+            <label for="id_name" class="block text-sm font-medium text-gray-700">
+                Name *
+            </label>
+            <input type="text" name="name" id="id_name" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   required autofocus value="{{ form.name.value|default:'' }}">
+            {% if form.name.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.name.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Organization URL -->
+        <div>
+            <label for="id_organization_url" class="block text-sm font-medium text-gray-700">
+                Organisations-URL *
+            </label>
+            <input type="url" name="organization_url" id="id_organization_url" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   required
+                   placeholder="https://..."
+                   value="{{ form.organization_url.value|default:'' }}">
+            {% if form.organization_url.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.organization_url.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Street -->
+        <div>
+            <label for="id_street" class="block text-sm font-medium text-gray-700">
+                Straße
+            </label>
+            <input type="text" name="street" id="id_street" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   placeholder="Straße und Hausnummer (optional)"
+                   value="{{ form.street.value|default:'' }}">
+            {% if form.street.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.street.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Post Code -->
+        <div>
+            <label for="id_post_code" class="block text-sm font-medium text-gray-700">
+                Postleitzahl *
+            </label>
+            <input type="text" name="post_code" id="id_post_code" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   required
+                   placeholder="12345"
+                   pattern="\d{5}"
+                   title="Die PLZ muss aus 5 Ziffern bestehen."
+                   value="{{ form.post_code.value|default:'' }}">
+            {% if form.post_code.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.post_code.errors }}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- City -->
+        <div>
+            <label for="id_city" class="block text-sm font-medium text-gray-700">
+                Stadt
+            </label>
+            <input type="text" name="city" id="id_city" 
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                   placeholder="Stadt (optional)"
+                   value="{{ form.city.value|default:'' }}">
+            {% if form.city.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.city.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Organisation erstellen
+            </button>
+        </div>
+    </form>
+    
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <p>Zurück zur 
+            <a href="{% url 'authapp:organization_list' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Organisations-Übersicht
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

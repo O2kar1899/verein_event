@@ -6,6 +6,7 @@ from .models import Organization, UserProfile
 
 
 class UserProfileForm(UserCreationForm):
+
     phone = forms.CharField(
         max_length=15, 
         required=False,
@@ -54,3 +55,37 @@ class UserProfileForm(UserCreationForm):
         self.fields['password2'].widget.attrs.update({
             'class': 'w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all'
         })
+
+
+
+class OrganizationForm(forms.ModelForm):
+    class Meta:
+        model = Organization
+        fields = ['name', 'organization_url', 'street', 'post_code', 'city']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'Name der Organisation',
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+            'organization_url': forms.URLInput(attrs={
+                'placeholder': 'https://...',
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+            'street': forms.TextInput(attrs={
+                'placeholder': 'Straße und Hausnummer (optional)',
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+            'post_code': forms.TextInput(attrs={
+                'placeholder': '12345',
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+            'city': forms.TextInput(attrs={
+                'placeholder': 'Stadt (optional)',
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['street'].required = False
+        self.fields['city'].required = False
