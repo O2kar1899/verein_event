@@ -1,23 +1,30 @@
 import logging
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.db import transaction
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import View
 from django.views.generic import TemplateView
 
-from .forms import OrganizationForm, UserProfileForm
-from .models import Organization, UserProfile
+from .forms import (
+    OrganizationAccessRequestForm,
+    OrganizationAccessReviewForm,
+    OrganizationForm,
+    UserProfileForm,
+)
+from .models import Organization, OrganizationAccessRequest, UserProfile
 
 logger = logging.getLogger(__name__)
 
@@ -142,4 +149,102 @@ def organization_list(request):
     return render(request, 'authapp/organization_list.html', {
         'organizations': organizations,
         'title': 'Organisationen'
+    })
+
+
+
+@login_required
+def request_organization_access(request):
+    if request.method == 'POST':
+        form = OrganizationAccessRequestForm(request.POST, initial={'user': request.user})
+        if form.is_valid():
+            access_request = form.save(commit=False)
+            access_request.user = request.user
+            access_request.save()
+            
+            # E-Mail an Admin senden
+            subject = f'Neuer Freischaltungsantrag für {access_request.organization.name}'
+            message = f'''Ein neuer Freischaltungsantrag liegt vor:
+            
+            User: {request.user.get_full_name()} ({request.user.email})
+            Organisation: {access_request.organization.name}
+            
+            Bitte prüfen Sie den Antrag im Admin-Bereich.'''
+            
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [admin[1] for admin in settings.ADMINS],
+                fail_silently=False,
+            )
+            
+            messages.success(request, "Ihr Antrag wurde eingereicht und wird geprüft.")
+            return redirect('authapp:organization_list')
+    else:
+        form = OrganizationAccessRequestForm(initial={'user': request.user})
+    
+    return render(request, 'authapp/request_access.html', {
+        'form': form,
+        'title': 'Freischaltung beantragen'
+    })
+
+@login_required
+def my_access_requests(request):
+    requests = OrganizationAccessRequest.objects.filter(user=request.user)
+    return render(request, 'authapp/my_access_requests.html', {
+        'requests': requests,
+        'title': 'Meine Freischaltungsanträge'
+    })
+
+def is_admin(user):
+    return user.is_staff or user.is_superuser
+
+@user_passes_test(is_admin)
+def review_access_requests(request):
+    pending_requests = OrganizationAccessRequest.objects.filter(status='pending')
+    return render(request, 'authapp/review_access_requests.html', {
+        'pending_requests': pending_requests,
+        'title': 'Freischaltungsanträge prüfen'
+    })
+
+@user_passes_test(is_admin)
+def review_access_request_detail(request, request_id):
+    access_request = get_object_or_404(OrganizationAccessRequest, id=request_id)
+    
+    if request.method == 'POST':
+        form = OrganizationAccessReviewForm(request.POST, instance=access_request)
+        if form.is_valid():
+            reviewed_request = form.save(commit=False)
+            reviewed_request.reviewed_by = request.user
+            reviewed_request.reviewed_at = timezone.now()
+            reviewed_request.save()
+            
+            # Wenn genehmigt, User zur Organisation hinzufügen
+            if reviewed_request.status == 'approved':
+                user_profile = UserProfile.objects.get(user=reviewed_request.user)
+                user_profile.organizations.add(reviewed_request.organization)
+                
+                # Bestätigungsmail an User
+                subject = f'Freischaltung für {reviewed_request.organization.name}'
+                message = f'''Ihr Freischaltungsantrag für {reviewed_request.organization.name} wurde genehmigt.
+                Sie können jetzt die Registrierungen für Events dieser Organisation einsehen.'''
+                
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [reviewed_request.user.email],
+                    fail_silently=False,
+                )
+            
+            messages.success(request, f"Antrag von {reviewed_request.user.username} wurde {reviewed_request.get_status_display()}.")
+            return redirect('authapp:review_access_requests')
+    else:
+        form = OrganizationAccessReviewForm(instance=access_request)
+    
+    return render(request, 'authapp/review_access_request_detail.html', {
+        'access_request': access_request,
+        'form': form,
+        'title': 'Freischaltungsantrag prüfen'
     })

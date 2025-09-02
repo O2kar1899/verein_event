@@ -9,21 +9,6 @@
     {% block css_files %}
     <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
     {% endblock %}
-    <style>
-        .nav-link {
-            transition: color 0.2s ease-in-out;
-        }
-        .nav-link:hover {
-            color: #2563eb; /* blue-600 */
-        }
-        .active-link {
-            font-weight: 600;
-            color: #1d4ed8; /* blue-700 */
-        }
-        .dropdown-menu a {
-            transition: background-color 0.2s ease-in-out;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-100">
@@ -33,8 +18,7 @@
             <div class="flex justify-between h-16">
                 <!-- Brand/Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="{% url 'startapp:starting-page' %}" 
-                       class="text-xl font-semibold text-gray-900 nav-link {% if request.resolver_match.url_name == 'starting-page' %}active-link{% endif %}">
+                    <a href="{% url 'startapp:starting-page' %}" class="text-xl font-semibold text-gray-900">
                         Start
                     </a>
                 </div>
@@ -42,41 +26,35 @@
                 <!-- Desktop Menu Links -->
                 <div class="hidden md:flex md:items-center md:space-x-4">
                     <!-- Hauptnavigation -->
-                    <a href="{% url 'eventapp:event_list' %}" 
-                       class="px-3 py-2 text-sm font-medium text-gray-700 nav-link {% if request.resolver_match.namespace == 'eventapp' and request.resolver_match.url_name == 'event_list' %}active-link{% endif %}">
+                    <a href="{% url 'eventapp:event_list' %}" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                         Events
                     </a>
-                    <a href="{% url 'authapp:organization_list' %}" 
-                       class="px-3 py-2 text-sm font-medium text-gray-700 nav-link {% if request.resolver_match.namespace == 'authapp' and request.resolver_match.url_name == 'organization_list' %}active-link{% endif %}">
+                    <a href="{% url 'authapp:organization_list' %}" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                         Organisationen
                     </a>
                     
                     <!-- User-Bereich (nur für angemeldete User) -->
                     {% if user.is_authenticated %}
                     <div class="relative group">
-                        <button class="dropdown-btn px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 flex items-center transition-colors duration-200">
+                        <button class="dropdown-btn px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 flex items-center">
                             Mein Bereich
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                         <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 
                                     opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-                                    transition-all duration-200 z-10 border border-gray-100">
-                            <a href="{% url 'eventapp:my_registrations' %}" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 {% if request.resolver_match.url_name == 'my_registrations' %}bg-blue-50 text-blue-700{% endif %}">
+                                    md:group-hover:block transition-all duration-200 z-10 hidden md:block">
+                            <a href="{% url 'eventapp:my_registrations' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Meine Registrierungen
                             </a>
-                            <a href="{% url 'authapp:request_access' %}" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 {% if request.resolver_match.url_name == 'request_access' %}bg-blue-50 text-blue-700{% endif %}">
+                            <a href="{% url 'authapp:request_access' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Freischaltung beantragen
                             </a>
-                            <a href="{% url 'authapp:my_access_requests' %}" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 {% if request.resolver_match.url_name == 'my_access_requests' %}bg-blue-50 text-blue-700{% endif %}">
+                            <a href="{% url 'authapp:my_access_requests' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Meine Anträge
                             </a>
-                            <a href="{% url 'authapp:passwort_aendern' %}" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 {% if request.resolver_match.url_name == 'passwort_aendern' %}bg-blue-50 text-blue-700{% endif %}">
+                            <a href="{% url 'authapp:passwort_aendern' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Passwort ändern
                             </a>
                         </div>
@@ -86,21 +64,19 @@
                     <!-- Admin-Bereich (nur für Admins) -->
                     {% if user.is_staff or user.is_superuser %}
                     <div class="relative group">
-                        <button class="dropdown-btn px-3 py-2 text-sm font-medium text-red-700 hover:text-red-800 flex items-center transition-colors duration-200">
+                        <button class="dropdown-btn px-3 py-2 text-sm font-medium text-red-700 hover:text-red-900 flex items-center">
                             Admin
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                         <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 
                                     opacity-0 invisible group-hover:opacity-100 group-hover:visible 
-                                    transition-all duration-200 z-10 border border-gray-100">
-                            <a href="{% url 'authapp:review_access_requests' %}" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 {% if request.resolver_match.url_name == 'review_access_requests' %}bg-red-50 text-red-700{% endif %}">
+                                    md:group-hover:block transition-all duration-200 z-10 hidden md:block">
+                            <a href="{% url 'authapp:review_access_requests' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Anträge prüfen
                             </a>
-                            <a href="/admin/" 
-                               class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 {% if request.path == '/admin/' or request.path|slice:'0:6' == '/admin' %}bg-red-50 text-red-700{% endif %}">
+                            <a href="/admin/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 Django Admin
                             </a>
                         </div>
@@ -110,7 +86,7 @@
 
                 <!-- Mobile menu button -->
                 <div class="-mr-2 flex items-center md:hidden">
-                    <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 focus:outline-none transition-colors duration-200">
+                    <button type="button" class="mobile-menu-button inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none">
                         <span class="sr-only">Menü öffnen</span>
                         <!-- Hamburger icon -->
                         <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,17 +104,15 @@
                             </span>
                             <form method="post" action="{% url 'authapp:logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                                <button type="submit" class="text-sm font-medium text-gray-700 hover:text-gray-900">
                                     Logout
                                 </button>
                             </form>
                         {% else %}
-                            <a href="{% url 'authapp:login' %}" 
-                               class="px-3 py-2 text-sm font-medium text-gray-700 nav-link {% if request.resolver_match.url_name == 'login' %}active-link{% endif %}">
+                            <a href="{% url 'authapp:login' %}" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Login
                             </a>
-                            <a href="{% url 'authapp:registrieren' %}" 
-                               class="px-3 py-2 text-sm font-medium text-gray-700 nav-link {% if request.resolver_match.url_name == 'registrieren' %}active-link{% endif %}">
+                            <a href="{% url 'authapp:registrieren' %}" class="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900">
                                 Registrieren
                             </a>
                         {% endif %}
@@ -151,12 +125,10 @@
         <div class="mobile-menu hidden md:hidden">
             <div class="pt-2 pb-3 space-y-1">
                 <!-- Hauptnavigation -->
-                <a href="{% url 'eventapp:event_list' %}" 
-                   class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.namespace == 'eventapp' and request.resolver_match.url_name == 'event_list' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'eventapp:event_list' %}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Events
                 </a>
-                <a href="{% url 'authapp:organization_list' %}" 
-                   class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.namespace == 'authapp' and request.resolver_match.url_name == 'organization_list' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'authapp:organization_list' %}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Organisationen
                 </a>
 
@@ -165,20 +137,16 @@
                 <div class="px-3 py-2 text-base font-medium text-gray-700 border-t border-gray-200 mt-2 pt-2">
                     Mein Bereich
                 </div>
-                <a href="{% url 'eventapp:my_registrations' %}" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'my_registrations' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'eventapp:my_registrations' %}" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Meine Registrierungen
                 </a>
-                <a href="{% url 'authapp:request_access' %}" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'request_access' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'authapp:request_access' %}" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Freischaltung beantragen
                 </a>
-                <a href="{% url 'authapp:my_access_requests' %}" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'my_access_requests' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'authapp:my_access_requests' %}" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Meine Anträge
                 </a>
-                <a href="{% url 'authapp:passwort_aendern' %}" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'passwort_aendern' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                <a href="{% url 'authapp:passwort_aendern' %}" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Passwort ändern
                 </a>
                 {% endif %}
@@ -188,12 +156,10 @@
                 <div class="px-3 py-2 text-base font-medium text-red-700 border-t border-gray-200 mt-2 pt-2">
                     Admin-Bereich
                 </div>
-                <a href="{% url 'authapp:review_access_requests' %}" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'review_access_requests' %}bg-red-50 text-red-700 font-semibold{% endif %}">
+                <a href="{% url 'authapp:review_access_requests' %}" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Anträge prüfen
                 </a>
-                <a href="/admin/" 
-                   class="block px-6 py-2 text-base font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors duration-200 {% if request.path == '/admin/' or request.path|slice:'0:6' == '/admin' %}bg-red-50 text-red-700 font-semibold{% endif %}">
+                <a href="/admin/" class="block px-6 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                     Django Admin
                 </a>
                 {% endif %}
@@ -206,17 +172,15 @@
                     </div>
                     <form method="post" action="{% url 'authapp:logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200">
+                        <button type="submit" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                             Logout
                         </button>
                     </form>
                 {% else %}
-                    <a href="{% url 'authapp:login' %}" 
-                       class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'login' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                    <a href="{% url 'authapp:login' %}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                         Login
                     </a>
-                    <a href="{% url 'authapp:registrieren' %}" 
-                       class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 {% if request.resolver_match.url_name == 'registrieren' %}bg-blue-50 text-blue-700 font-semibold{% endif %}">
+                    <a href="{% url 'authapp:registrieren' %}" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50">
                         Registrieren
                     </a>
                 {% endif %}

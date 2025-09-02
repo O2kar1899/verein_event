@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm  # Dieser Import fehlte
 from django.contrib.auth.models import User
 
-from .models import Organization, UserProfile
+from .models import Organization, OrganizationAccessRequest, UserProfile
 
 
 class UserProfileForm(UserCreationForm):
@@ -89,3 +89,36 @@ class OrganizationForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['street'].required = False
         self.fields['city'].required = False
+
+
+class OrganizationAccessRequestForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationAccessRequest
+        fields = ['organization', 'data_consent']
+        widgets = {
+            'organization': forms.Select(attrs={
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Nur Organisationen anzeigen, für die der User noch keinen Antrag gestellt hat
+        user = kwargs.get('initial', {}).get('user')
+        if user:
+            existing_requests = OrganizationAccessRequest.objects.filter(
+                user=user
+            ).values_list('organization_id', flat=True)
+            self.fields['organization'].queryset = Organization.objects.exclude(
+                id__in=existing_requests
+            )
+
+class OrganizationAccessReviewForm(forms.ModelForm):
+    class Meta:
+        model = OrganizationAccessRequest
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={
+                'class': 'w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500'
+            }),
+        }

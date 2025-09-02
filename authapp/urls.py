@@ -24,6 +24,11 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
      # Organisationen URLs
-     path('organizations/', views.organization_list, name='organization_list'),
-     path('organizations/create/', views.create_organization, name='create_organization'),
+    path('organizations/', views.organization_list, name='organization_list'),
+    path('organizations/create/', views.create_organization, name='create_organization'),
+     # Zugriffsanfragen
+    path('request-access/', views.request_organization_access, name='request_access'),
+    path('my-access-requests/', views.my_access_requests, name='my_access_requests'),
+    path('review-access-requests/', views.review_access_requests, name='review_access_requests'),
+    path('review-access-requests/<int:request_id>/', views.review_access_request_detail, name='review_access_request_detail'),
      ]

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">{{ title }}</h2>
+    
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <div>
+            <label for="id_organization" class="block text-sm font-medium text-gray-700">
+                Organisation *
+            </label>
+            {{ form.organization }}
+            {% if form.organization.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.organization.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="flex items-start">
+            <div class="flex items-center h-5">
+                <input type="checkbox" name="data_consent" id="id_data_consent" 
+                       class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                       required>
+            </div>
+            <div class="ml-3 text-sm">
+                <label for="id_data_consent" class="font-medium text-gray-700">
+                    Ich stimme zu, dass meine persönlichen Daten (Name, E-Mail) an die Organisation übermittelt werden, 
+                    um über meinen Antrag auf Freischaltung zu entscheiden.
+                </label>
+            </div>
+            {% if form.data_consent.errors %}
+            <div class="mt-1 text-sm text-red-600">
+                {{ form.data_consent.errors }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                Antrag stellen
+            </button>
+        </div>
+    </form>
+    
+    <div class="mt-6 text-center text-sm text-gray-600">
+        <p>Zurück zur 
+            <a href="{% url 'authapp:organization_list' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Organisations-Übersicht
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

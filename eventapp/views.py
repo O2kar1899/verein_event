@@ -1,4 +1,4 @@
-from authapp.models import Organization
+from authapp.models import Organization, UserProfile
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -101,3 +101,26 @@ def my_registrations(request):
         form = EmailLookupForm()
     
     return render(request, 'eventapp/my_registrations.html', {'form': form})
+
+
+
+@login_required
+def organization_event_registrations(request, organization_id):
+    # Prüfen ob User Zugriff auf diese Organisation hat
+    user_profile = UserProfile.objects.get(user=request.user)
+    organization = get_object_or_404(Organization, id=organization_id)
+    
+    if organization not in user_profile.organizations.all():
+        messages.error(request, "Sie haben keinen Zugriff auf diese Organisation.")
+        return redirect('eventapp:event_list')
+    
+    # Events der Organisation mit Registrierungen
+    events = EventModel.objects.filter(organization=organization).prefetch_related('registrations')
+    
+    return render(request, 'eventapp/organization_registrations.html', {
+        'organization': organization,
+        'events': events,
+        'title': f'Registrierungen - {organization.name}'
+    })
+
+
