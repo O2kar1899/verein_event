@@ -40,11 +40,11 @@ def event_registration(request, event_id):
     
     if not event.registration_required:
         messages.error(request, "Für dieses Event ist keine Anmeldung erforderlich.")
-        return redirect('eventapp:event_detail', event_id=event.id)
+        return redirect('eventapp:event_detail', event_id=event.id) # type: ignore
     
     if event.is_full():
         messages.error(request, "Dieses Event ist bereits ausgebucht.")
-        return redirect('eventapp:event_detail', event_id=event.id)
+        return redirect('eventapp:event_detail', event_id=event.id) # type: ignore
     
     if request.method == 'POST':
         form = EventRegistrationForm(request.POST)
@@ -58,7 +58,7 @@ def event_registration(request, event_id):
             else:
                 registration.save()
                 messages.success(request, "Sie haben sich erfolgreich für das Event angemeldet!")
-                return redirect('eventapp:event_detail', event_id=event.id)
+                return redirect('eventapp:event_detail', event_id=event.id) # type: ignore
     else:
         form = EventRegistrationForm()
     

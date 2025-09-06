@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-8 py-6 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+        <p class="mt-2 text-sm text-gray-600">Übersicht über alle Ihre Freischaltungsanträge</p>
+    </div>
+    
+    <div class="p-8">
+        {% if requests %}
+        <div class="space-y-6">
+            {% for request in requests %}
+            <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow
+                {% if request.status == 'approved' %}border-green-200 bg-green-50
+                {% elif request.status == 'rejected' %}border-red-200 bg-red-50
+                {% else %}border-yellow-200 bg-yellow-50{% endif %}">
+                
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">
+                            {{ request.organization.name }}
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+                            <div>
+                                <span class="font-medium">Antragsdatum:</span>
+                                <span class="ml-2">{{ request.requested_at|date:"d.m.Y H:i" }}</span>
+                            </div>
+                            
+                            {% if request.organization.city %}
+                            <div>
+                                <span class="font-medium">Ort:</span>
+                                <span class="ml-2">{{ request.organization.city }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if request.reviewed_at %}
+                            <div>
+                                <span class="font-medium">Bearbeitet am:</span>
+                                <span class="ml-2">{{ request.reviewed_at|date:"d.m.Y H:i" }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if request.reviewed_by %}
+                            <div>
+                                <span class="font-medium">Bearbeitet von:</span>
+                                <span class="ml-2">{{ request.reviewed_by.get_full_name|default:request.reviewed_by.username }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if request.organization.organization_url %}
+                        <div class="mt-3">
+                            <a href="{{ request.organization.organization_url }}" 
+                               target="_blank" 
+                               class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                Website besuchen →
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="ml-6 flex flex-col items-end space-y-2">
+                        <!-- Status Badge -->
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                            {% if request.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif request.status == 'approved' %}bg-green-100 text-green-800
+                            {% elif request.status == 'rejected' %}bg-red-100 text-red-800{% endif %}">
+                            {% if request.status == 'pending' %}
+                                ⏳ {{ request.get_status_display }}
+                            {% elif request.status == 'approved' %}
+                                ✅ {{ request.get_status_display }}
+                            {% elif request.status == 'rejected' %}
+                                ❌ {{ request.get_status_display }}
+                            {% endif %}
+                        </span>
+                        
+                        <!-- Action Buttons -->
+                        {% if request.status == 'approved' %}
+                        <a href="{% url 'eventapp:event_list' %}" 
+                           class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                            Events anzeigen
+                        </a>
+                        {% elif request.status == 'pending' %}
+                        <div class="text-xs text-gray-500 text-right">
+                            <p>⏳ Wird bearbeitet</p>
+                            <p class="mt-1">Sie erhalten eine E-Mail bei Entscheidung</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Status-spezifische Nachrichten -->
+                {% if request.status == 'approved' %}
+                <div class="mt-4 p-3 bg-green-100 border border-green-200 rounded-md">
+                    <div class="flex">
+                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">
+                                Freischaltung erfolgreich!
+                            </p>
+                            <p class="text-sm text-green-700 mt-1">
+                                Sie haben jetzt Zugriff auf Events dieser Organisation und können sich für Veranstaltungen registrieren.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% elif request.status == 'rejected' %}
+                <div class="mt-4 p-3 bg-red-100 border border-red-200 rounded-md">
+                    <div class="flex">
+                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800">
+                                Antrag wurde abgelehnt
+                            </p>
+                            <p class="text-sm text-red-700 mt-1">
+                                Ihr Freischaltungsantrag konnte nicht genehmigt werden. Bei Fragen wenden Sie sich bitte direkt an die Organisation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% elif request.status == 'pending' %}
+                <div class="mt-4 p-3 bg-yellow-100 border border-yellow-200 rounded-md">
+                    <div class="flex">
+                        <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-yellow-800">
+                                Antrag wird bearbeitet
+                            </p>
+                            <p class="text-sm text-yellow-700 mt-1">
+                                Ihr Antrag wurde eingereicht und wird von einem Administrator geprüft. Sie erhalten eine E-Mail-Benachrichtigung über die Entscheidung.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Navigation -->
+        <div class="mt-8 flex justify-center space-x-4">
+            <a href="{% url 'authapp:organization_list' %}" 
+               class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors">
+                Weitere Organisationen
+            </a>
+            
+            <a href="{% url 'startapp:starting-page' %}" 
+               class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-6 rounded-md transition-colors">
+                Zur Startseite
+            </a>
+        </div>
+        
+        {% else %}
+        <!-- Keine Anträge vorhanden -->
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">Keine Anträge vorhanden</h3>
+            <p class="mt-2 text-gray-500">Sie haben noch keine Freischaltungsanträge gestellt.</p>
+            
+            <div class="mt-6 space-x-4">
+                <a href="{% url 'authapp:request_access' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                    Ersten Antrag stellen
+                </a>
+                
+                <a href="{% url 'authapp:organization_list' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                    Organisationen anzeigen
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Statistik-Bereich für Benutzer mit Anträgen -->
+{% if requests %}
+<div class="max-w-4xl mx-auto mt-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Ihre Anträge im Überblick</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Ausstehend -->
+            {% with pending_count=requests|length %}
+            {% with pending_requests=requests|dictsort:"status" %}
+            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-md">
+                        <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-yellow-800">Ausstehend</p>
+                        <p class="text-2xl font-semibold text-yellow-900">
+                            {{ requests|dictsort:"status"|dictsort:"status"|dictsortreversed:"status"|length|add:"-"|add:requests|length|add:requests|length }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            
+            <!-- Genehmigt -->
+            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-md">
+                        <svg class="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-green-800">Genehmigt</p>
+                        <p class="text-2xl font-semibold text-green-900" id="approved-count">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abgelehnt -->
+            <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                <div class="flex items-center">
+                    <div class="p-2 bg-red-100 rounded-md">
+                        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-red-800">Abgelehnt</p>
+                        <p class="text-2xl font-semibold text-red-900" id="rejected-count">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Statistiken berechnen
+document.addEventListener('DOMContentLoaded', function() {
+    const statusElements = document.querySelectorAll('[class*="bg-yellow-50"], [class*="bg-green-50"], [class*="bg-red-50"]');
+    let approved = 0, rejected = 0, pending = 0;
+    
+    {% for request in requests %}
+        {% if request.status == 'approved' %}approved++;
+        {% elif request.status == 'rejected' %}rejected++;
+        {% elif request.status == 'pending' %}pending++;
+        {% endif %}
+    {% endfor %}
+    
+    // Werte in die Statistik-Boxen einfügen
+    const approvedElement = document.getElementById('approved-count');
+    const rejectedElement = document.getElementById('rejected-count');
+    
+    if (approvedElement) approvedElement.textContent = approved;
+    if (rejectedElement) rejectedElement.textContent = rejected;
+    
+    // Ausstehende Anträge (bereits im Template berechnet, aber für Konsistenz)
+    const pendingElements = document.querySelectorAll('.bg-yellow-50 .text-2xl');
+    if (pendingElements.length > 0) {
+        pendingElements[0].textContent = pending;
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

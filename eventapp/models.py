@@ -31,14 +31,14 @@ class EventModel(models.Model):
         """Berechnet die verfügbaren Plätze"""
         if self.max_participants is None:
             return None
-        registered = self.registrations.count()
+        registered = self.registrations.count() # type: ignore
         return max(0, self.max_participants - registered)
     
     def is_full(self):
         """Prüft ob das Event ausgebucht ist"""
         if self.max_participants is None:
             return False
-        return self.registrations.count() >= self.max_participants
+        return self.registrations.count() >= self.max_participants # type: ignore
     
 class EventRegistration(models.Model):
     event = models.ForeignKey(EventModel, on_delete=models.CASCADE, related_name='registrations')

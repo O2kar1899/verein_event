@@ -109,7 +109,7 @@ class OrganizationAccessRequestForm(forms.ModelForm):
             existing_requests = OrganizationAccessRequest.objects.filter(
                 user=user
             ).values_list('organization_id', flat=True)
-            self.fields['organization'].queryset = Organization.objects.exclude(
+            self.fields['organization'].queryset = Organization.objects.exclude(  # type: ignore
                 id__in=existing_requests
             )
 

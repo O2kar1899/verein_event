@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto mt-10 bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-8 py-6 bg-gray-50 border-b border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800">{{ title }}</h2>
+        <p class="mt-2 text-sm text-gray-600">Übersicht aller ausstehenden Freischaltungsanträge</p>
+    </div>
+    
+    <div class="p-8">
+        {% if pending_requests %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Antragsteller
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Organisation
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Antragsdatum
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Aktionen
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for request in pending_requests %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-10 w-10">
+                                    <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+                                        <span class="text-sm font-medium text-white">
+                                            {{ request.user.first_name|first|default:request.user.username|first|upper }}{{ request.user.last_name|first|upper }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">
+                                        {{ request.user.get_full_name|default:request.user.username }}
+                                    </div>
+                                    <div class="text-sm text-gray-500">
+                                        {{ request.user.email }}
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">{{ request.organization.name }}</div>
+                            {% if request.organization.city %}
+                            <div class="text-sm text-gray-500">{{ request.organization.city }}</div>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">{{ request.requested_at|date:"d.m.Y" }}</div>
+                            <div class="text-sm text-gray-500">{{ request.requested_at|date:"H:i" }} Uhr</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                {{ request.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <a href="{% url 'authapp:review_access_request_detail' request.id %}" 
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+                                    Bearbeiten
+                                </a>
+                                <button onclick="quickApprove({{ request.id }}, '{{ request.user.username }}', '{{ request.organization.name }}')"
+                                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+                                    ✓ Genehmigen
+                                </button>
+                                <button onclick="quickReject({{ request.id }}, '{{ request.user.username }}', '{{ request.organization.name }}')"
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors">
+                                    ✗ Ablehnen
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Statistik-Bereich -->
+        <div class="mt-8 bg-blue-50 p-6 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="text-lg font-medium text-blue-900">Ausstehende Anträge</h3>
+                    <p class="text-blue-700">{{ pending_requests|length }} Antrag{{ pending_requests|length|pluralize:"e" }} warten auf Bearbeitung</p>
+                </div>
+                <div class="text-3xl font-bold text-blue-600">
+                    {{ pending_requests|length }}
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <!-- Keine ausstehenden Anträge -->
+        <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">Alle Anträge bearbeitet</h3>
+            <p class="mt-2 text-gray-500">Zurzeit liegen keine Freischaltungsanträge vor.</p>
+            
+            <div class="mt-6">
+                <a href="{% url 'authapp:organization_list' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+                    Zu den Organisationen
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Action Modal -->
+<div id="quickActionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 id="modalTitle" class="text-lg font-medium text-gray-900 mb-4"></h3>
+            <p id="modalMessage" class="text-gray-600 mb-6"></p>
+            
+            <div class="flex space-x-4">
+                <button id="confirmAction" 
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                    Bestätigen
+                </button>
+                <button onclick="closeModal()" 
+                        class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors">
+                    Abbrechen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentRequestId = null;
+let currentAction = null;
+
+function quickApprove(requestId, username, organizationName) {
+    currentRequestId = requestId;
+    currentAction = 'approved';
+    
+    document.getElementById('modalTitle').textContent = 'Antrag genehmigen';
+    document.getElementById('modalMessage').innerHTML = 
+        `Möchten Sie den Freischaltungsantrag von <strong>${username}</strong> für <strong>${organizationName}</strong> genehmigen?<br><br>Der Benutzer erhält sofort Zugriff auf die Organisation.`;
+    
+    document.getElementById('quickActionModal').classList.remove('hidden');
+}
+
+function quickReject(requestId, username, organizationName) {
+    currentRequestId = requestId;
+    currentAction = 'rejected';
+    
+    document.getElementById('modalTitle').textContent = 'Antrag ablehnen';
+    document.getElementById('modalMessage').innerHTML = 
+        `Möchten Sie den Freischaltungsantrag von <strong>${username}</strong> für <strong>${organizationName}</strong> ablehnen?`;
+    
+    document.getElementById('quickActionModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('quickActionModal').classList.add('hidden');
+    currentRequestId = null;
+    currentAction = null;
+}
+
+document.getElementById('confirmAction').addEventListener('click', function() {
+    if (currentRequestId && currentAction) {
+        // Erstelle ein verstecktes Form und sende es ab
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/auth/review-access-requests/${currentRequestId}/`;
+        
+        // CSRF Token
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrfToken) {
+            form.appendChild(csrfToken.cloneNode());
+        }
+        
+        // Status Field
+        const statusField = document.createElement('input');
+        statusField.type = 'hidden';
+        statusField.name = 'status';
+        statusField.value = currentAction;
+        form.appendChild(statusField);
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+});
+
+// Modal schließen bei Klick außerhalb
+document.getElementById('quickActionModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+</script>
+{% endblock %}

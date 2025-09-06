@@ -96,7 +96,7 @@ def sende_bestaetigungs_email(request, user):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         
         aktivierungs_link = request.build_absolute_uri(
-            reverse("konto_bestaetigen", kwargs={"uidb64": uid, "token": token})
+            reverse("authapp:konto_bestaetigen", kwargs={"uidb64": uid, "token": token})
         )
         
         send_mail(
@@ -122,10 +122,10 @@ def konto_bestaetigen(request, uidb64, token):
         user.is_active = True
         user.save()
         messages.success(request, 'Konto erfolgreich bestätigt! Sie können sich jetzt einloggen.')
-        return redirect('login')
+        return redirect('authapp:login')
     else:
         messages.error(request, 'Ungültiger oder abgelaufener Bestätigungslink.')
-        return redirect('registrieren')
+        return redirect('authapp:registrieren')
 
 
 @login_required

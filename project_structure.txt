@@ -1,0 +1,120 @@
+verein_event/
+├── authapp/
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── admin.cpython-312.pyc
+│   │   ├── apps.cpython-312.pyc
+│   │   ├── forms.cpython-312.pyc
+│   │   ├── models.cpython-312.pyc
+│   │   ├── urls.cpython-312.pyc
+│   │   └── views.cpython-312.pyc
+│   ├── migrations/
+│   │   ├── __pycache__/
+│   │   ├── 0001_initial.py
+│   │   ├── 0002_organizations_delete_veranstaltung_delete_verein_and_more.py
+│   │   ├── 0003_rename_organizations_organization.py
+│   │   ├── 0004_organization_city.py
+│   │   ├── 0005_remove_userprofile_vereine_userprofile_organizations_and_more.py
+│   │   └── __init__.py
+│   ├── static/
+│   │   ├── authapp/
+│   │   └── js/
+│   ├── templates/
+│   │   └── authapp/
+│   ├── templatetags/
+│   │   ├── __pycache__/
+│   │   ├── __init__.py
+│   │   └── form_filters.py
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── eventapp/
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── admin.cpython-312.pyc
+│   │   ├── apps.cpython-312.pyc
+│   │   ├── forms.cpython-312.pyc
+│   │   ├── models.cpython-312.pyc
+│   │   ├── urls.cpython-312.pyc
+│   │   └── views.cpython-312.pyc
+│   ├── migrations/
+│   │   ├── __pycache__/
+│   │   ├── 0001_initial.py
+│   │   ├── 0002_alter_eventmodel_organization_and_more.py
+│   │   ├── 0003_alter_eventmodel_event_url_and_more.py
+│   │   ├── 0004_alter_eventmodel_event_url.py
+│   │   ├── 0005_eventmodel_created_at_eventmodel_description_and_more.py
+│   │   ├── 0006_alter_eventmodel_created_at_and_more.py
+│   │   ├── 0007_alter_eventmodel_created_at.py
+│   │   ├── 0008_eventmodel_max_participants_and_more.py
+│   │   ├── 0009_alter_eventmodel_created_at_and_more.py
+│   │   └── __init__.py
+│   ├── templates/
+│   │   └── eventapp/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── readme.txt
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── startapp/
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── admin.cpython-312.pyc
+│   │   ├── apps.cpython-312.pyc
+│   │   ├── models.cpython-312.pyc
+│   │   ├── urls.cpython-312.pyc
+│   │   └── views.cpython-312.pyc
+│   ├── migrations/
+│   │   ├── __pycache__/
+│   │   └── __init__.py
+│   ├── templates/
+│   │   └── startapp/
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── templates/
+│   ├── base.html
+│   └── base_old2.html
+├── theme/
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   └── apps.cpython-312.pyc
+│   ├── static/
+│   │   └── css/
+│   ├── static_src/
+│   │   ├── node_modules/
+│   │   ├── src/
+│   │   ├── package-lock.json
+│   │   └── postcss.config.js
+│   ├── templates/
+│   │   └── base.html
+│   ├── __init__.py
+│   └── apps.py
+├── veranstaltungen/
+│   ├── __pycache__/
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── settings.cpython-312.pyc
+│   │   ├── urls.cpython-312.pyc
+│   │   └── wsgi.cpython-312.pyc
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── db.sqlite3
+├── manage.py
+├── package.json
+└── requirements.txt
