@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Organization(models.Model):
@@ -60,4 +62,15 @@ class OrganizationAccessRequest(models.Model):
     
     def __str__(self):
         return f"{self.user.username} - {self.organization.name} ({self.status})"
-    
+
+
+
+
+@receiver(post_save, sender=User)
+def create_or_update_user_profile(sender, instance, created, **kwargs):
+    """
+    Erstellt ein UserProfile nur wenn der User neu erstellt wurde.
+    """
+    if created:
+        # Nur bei neuen Usern ein UserProfile erstellen
+        UserProfile.objects.get_or_create(user=instance)

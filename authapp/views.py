@@ -222,7 +222,7 @@ def review_access_request_detail(request, request_id):
             
             # Wenn genehmigt, User zur Organisation hinzufügen
             if reviewed_request.status == 'approved':
-                user_profile = UserProfile.objects.get(user=reviewed_request.user)
+                user_profile, created = UserProfile.objects.get_or_create(user=reviewed_request.user)
                 user_profile.organizations.add(reviewed_request.organization)
                 
                 # Bestätigungsmail an User
